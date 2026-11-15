@@ -632,3 +632,53 @@ mark { background: linear-gradient(transparent 62%, var(--sun) 62%); color: inhe
   .ticker { transform: rotate(-1.5deg) scale(1.04); }
 }
 
+/* =====================================================================
+   Refinement pass: a calmer palette and layered scrolling.
+   ===================================================================== */
+:root {
+  --paper: #faf6ee;
+  --paper-2: #f0e9db;
+  --ink: #1b1e36;
+  --ink-2: #3a3e55;
+  --blue: #3d4fb8;
+  --coral: #d9694c;
+  --sun: #ecc572;
+  --mint: #cfe3d4;
+  --green: #3a7d60;
+  --lilac: #dcd9f1;
+  --pink: #f3ddd2;
+}
+.progress { background: linear-gradient(90deg, var(--blue), var(--coral)); height: 2px; }
+.btn:hover { box-shadow: 3px 3px 0 var(--ink); }
+.hero__portrait img { box-shadow: 14px 14px 0 var(--sun); }
+.numbers > div:nth-child(1) { background: var(--blue); }
+.numbers > div:nth-child(3) { background: var(--coral); }
+.zopa__zone { background: rgba(236, 197, 114, 0.5); }
+.contact h2 em, .section--dark .section__head h2 em, .section--dark .job__pts li b, .section--dark .job__when b { color: var(--sun); }
+.live { background: var(--mint); }
+
+/* Layers: each section pins when its end reaches the screen, and the next one slides over it. */
+.layer {
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  border-radius: 34px 34px 0 0;
+  box-shadow: 0 -22px 48px -30px rgba(27, 30, 54, 0.5);
+  padding-bottom: clamp(56px, 8vw, 110px);
+}
+.hero.layer { border-radius: 0; box-shadow: none; padding-bottom: clamp(36px, 5vw, 64px); }
+.section--dark.layer { background: var(--ink); margin-top: 0; }
+.section--sun.layer { background: #f5e8c4; margin-top: 0; }
+.section--dark + .section { padding-top: clamp(72px, 10vw, 140px); }
+.ticker-wrap { position: relative; background: var(--paper); padding: 22px 0 10px; }
+.ticker { margin-top: 0; }
+.contact { position: relative; border-radius: 34px 34px 0 0; margin-top: -34px; box-shadow: 0 -22px 48px -30px rgba(27, 30, 54, 0.5); }
+@media (max-width: 720px) {
+  .layer, .contact { border-radius: 22px 22px 0 0; }
+  .contact { margin-top: -22px; }
+  .hero.layer { border-radius: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .layer { position: relative; top: auto !important; }
+}
+

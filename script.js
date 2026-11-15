@@ -64,6 +64,22 @@
     }
   }
 
+  // Layers: a section pins once its bottom edge reaches the bottom of the screen,
+  // so the whole section is read before the next one slides over it.
+  var layers = $$(".layer");
+  if (layers.length && !reduced) {
+    var setLayers = function () {
+      layers.forEach(function (el) { el.style.top = Math.min(0, window.innerHeight - el.offsetHeight) + "px"; });
+    };
+    setLayers();
+    window.addEventListener("resize", setLayers);
+    window.addEventListener("load", setLayers);
+    if ("ResizeObserver" in window) {
+      var ro = new ResizeObserver(setLayers);
+      layers.forEach(function (el) { ro.observe(el); });
+    }
+  }
+
   // Header
   var head = $(".site-head");
   var bar = $("#progress");
