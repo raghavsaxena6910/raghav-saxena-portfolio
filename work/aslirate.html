@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AsliRate | Raghav Saxena</title>
+<meta name="description" content="AsliRate is a live web app by Raghav Saxena that ranks supplier quotes by what each order really costs in rupees, counting GST credit, freight and minimum order quantities.">
+<meta property="og:title" content="AsliRate | Raghav Saxena">
+<meta property="og:description" content="A live web app that ranks supplier quotes by real landed cost, not the price printed on the quote.">
+<meta property="og:image" content="../assets/og.png">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<script>document.documentElement.classList.remove("no-js");</script>
+<noscript><style>body{opacity:1}.rv{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap site-head__in">
+    <a class="brand" href="../index.html">Raghav Saxena<i>.</i></a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#experience">Experience</a>
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#contact">Contact</a>
+      <a class="btn btn--solid btn--sm" href="../resume.html">Résumé</a>
+    </nav>
+  </div>
+</header>
+
+<main class="case">
+  <div class="wrap">
+    <a class="case__back label" href="../index.html#work">← All work</a>
+    <div class="case__top">
+      <div>
+        <span class="label">01 · AI · Product · SMB procurement</span>
+        <h1>AsliRate</h1>
+        <p class="case__lede">A live web app that ranks supplier quotes by what each order really costs in rupees, not by the price printed on the quote.</p>
+      </div>
+      <div class="case__facts">
+        <div><span class="label">Status</span><span class="live">Live at aslirate.in</span></div>
+        <div><span class="label">Context</span><span>AI in Business course, Masters' Union</span></div>
+        <div><span class="label">My role</span><span>Built and launched it on its own domain</span></div>
+        <a class="btn btn--solid" href="https://aslirate.in/" target="_blank" rel="noopener">Open aslirate.in <span class="arr">↗</span></a>
+      </div>
+    </div>
+
+    <div class="case__body">
+      <h2>The problem</h2>
+      <div class="blk rv">
+        <p>Small Indian businesses usually compare suppliers on the price per unit. That number leaves out most of the real cost: GST that can or cannot be claimed back as input tax credit, freight that one quote includes and another ignores, and minimum orders that force you to buy stock you do not need.</p>
+      </div>
+
+      <h2>What it does</h2>
+      <div class="blk rv">
+        <p>AsliRate takes two to six quotes in whatever form they arrive (a PDF, a WhatsApp screenshot, an Excel rate list or pasted text), reads them, and ranks the suppliers by landed cost. It adds freight and extras, prices in the extra stock a minimum order forces, and flags quotes that have expired or will miss the delivery date.</p>
+      </div>
+
+      <h2>The approach</h2>
+      <div class="blk rv">
+        <p>The main design decision was to split the work in two. AI reads the messy quotes; a fixed calculator produces every rupee figure, and the working is shown line by line so a buyer can check it or pass it to their CA.</p>
+      </div>
+
+      <h2>Features</h2>
+      <div class="blk rv">
+        <ul class="ticks">
+          <li>Reads PDFs, WhatsApp screenshots, Excel rate lists and pasted text</li>
+          <li>Ranks 2 to 6 suppliers by real landed cost</li>
+          <li>Counts GST credit, freight and minimum order quantities</li>
+          <li>Flags expired quotes and missed delivery dates</li>
+        </ul>
+      </div>
+
+      <h2>A worked example</h2>
+      <div class="blk rv">
+        <p>In the worked example on the site, a buyer needs 5,000 shipping boxes. The supplier quoting ₹17.20 a box ends up at ₹36.20 once its 10,000-box minimum, freight and GST are counted, while a ₹19.50 quote works out to ₹16.53, the cheapest real cost of the three.</p>
+        <table class="quotes" style="margin-top:8px">
+          <thead><tr><th>Line</th><th class="num">Amount</th></tr></thead>
+          <tbody>
+            <tr><td>10,000 boxes at ₹17.20 <small>Minimum order is 10,000; the buyer needs 5,000</small></td><td class="num">₹1,72,000.00</td></tr>
+            <tr><td>Freight to Gurugram</td><td class="num">₹9,000.00</td></tr>
+            <tr><td>GST at 18%</td><td class="num">₹32,580.00</td></tr>
+            <tr><td>GST claimed back as input tax credit</td><td class="num">−₹32,580.00</td></tr>
+            <tr class="is-best"><td>Real cost of the order <small>₹36.20 a box for the 5,000 needed</small></td><td class="num">₹1,81,000.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>What I learned</h2>
+      <div class="blk rv">
+        <p class="case__learn">Coming from audit, I knew a number is only useful if someone can trace how it was reached. AsliRate is the product version of that idea.</p>
+      </div>
+    </div>
+
+    <a class="next" href="negotia.html"><span class="label">Next project</span><b>Negotia →</b></a>
+  </div>
+</main>
+
+<footer class="wrap case-foot label">
+  <span>© 2026 Raghav Saxena</span>
+  <a href="mailto:raghav.saxena2027@mastersunion.org">raghav.saxena2027@mastersunion.org</a>
+  <a href="https://www.linkedin.com/in/raghav-saxena-/" target="_blank" rel="noopener">LinkedIn ↗</a>
+</footer>
+<script src="../script.js" defer></script>
+</body>
+</html>
