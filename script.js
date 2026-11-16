@@ -41,23 +41,30 @@
       if (fig) fig.remove();
       if (reel && !reel.querySelector("video")) reel.remove();
     };
+    // One clip plays at a time, and only when asked: hover on desktop, tap on a phone.
+    var playOnly = function (v) {
+      clips.forEach(function (o) { if (o !== v && !o.paused) o.pause(); });
+      v.play().catch(function () {});
+    };
     clips.forEach(function (v) {
+      var fig = v.closest("figure");
       v.addEventListener("error", function () { dropClip(v); });
-      v.addEventListener("click", function () {
-        if (v.paused) { v.dataset.held = ""; v.play().catch(function () {}); }
-        else { v.dataset.held = "1"; v.pause(); }
-      });
+      v.addEventListener("play", function () { if (fig) fig.classList.add("is-playing"); });
+      v.addEventListener("pause", function () { if (fig) fig.classList.remove("is-playing"); });
+      v.addEventListener("mouseenter", function () { playOnly(v); });
+      v.addEventListener("mouseleave", function () { v.pause(); });
+      v.addEventListener("click", function () { if (v.paused) playOnly(v); else v.pause(); });
     });
     if ("IntersectionObserver" in window) {
       var vo = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           var v = en.target;
           if (en.isIntersecting) {
-            if (!v.src) v.src = v.getAttribute("data-src");
-            if (!reduced && v.dataset.held !== "1" && en.intersectionRatio > 0.5) v.play().catch(function () {});
+            // Load just enough to show the first frame as a still.
+            if (!v.src) { v.preload = "metadata"; v.src = v.getAttribute("data-src") + "#t=0.1"; }
           } else if (!v.paused) v.pause();
         });
-      }, { rootMargin: "200px 0px", threshold: [0, 0.6] });
+      }, { rootMargin: "300px 0px" });
       clips.forEach(function (v) { vo.observe(v); });
     } else {
       clips.forEach(function (v) { v.src = v.getAttribute("data-src"); v.controls = true; });
@@ -66,30 +73,60 @@
 
   // Layers: a section pins once its bottom edge reaches the bottom of the screen,
   // so the whole section is read before the next one slides over it.
-  var layers = $$(".layer");
-  if (layers.length && !reduced) {
-    var setLayers = function () {
-      layers.forEach(function (el) { el.style.top = Math.min(0, window.innerHeight - el.offsetHeight) + "px"; });
-    };
-    setLayers();
-    window.addEventListener("resize", setLayers);
-    window.addEventListener("load", setLayers);
-    if ("ResizeObserver" in window) {
-      var ro = new ResizeObserver(setLayers);
-      layers.forEach(function (el) { ro.observe(el); });
-    }
+  // Only the opening pins (once its end is on screen); the rest of the page slides over it.
+  var hero = $(".hero.layer"), heroIn = hero ? $(".wrap", hero) : null, heroH = 0;
+  var wide = window.matchMedia("(min-width: 721px)");
+  var setHero = function () {
+    if (!hero) return;
+    heroH = hero.offsetHeight;
+    hero.style.top = Math.min(0, window.innerHeight - heroH) + "px";
+  };
+  if (hero && !reduced) {
+    setHero();
+    window.addEventListener("resize", setHero);
+    window.addEventListener("load", setHero);
+  }
+
+  // Smooth wheel scrolling on desktop (Lenis). Touch devices keep their native scroll.
+  var lenis = null;
+  if (window.Lenis && !reduced && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    try {
+      lenis = new window.Lenis({ lerp: 0.11, wheelMultiplier: 1, smoothWheel: true });
+      var raf = function (t) { lenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+      doc.addEventListener("click", function (e) {
+        var a = e.target.closest ? e.target.closest("a[href^='#']") : null;
+        if (!a) return;
+        var t = doc.querySelector(a.getAttribute("href"));
+        if (!t) return;
+        e.preventDefault();
+        lenis.scrollTo(t, { offset: -64, duration: 1.1 });
+        history.replaceState(null, "", a.getAttribute("href"));
+      });
+    } catch (err) { lenis = null; }
   }
 
   // Header
   var head = $(".site-head");
   var bar = $("#progress");
-  var onScroll = function () {
-    if (head) head.classList.toggle("is-scrolled", window.scrollY > 8);
+  var ticking = false;
+  var paint = function () {
+    ticking = false;
+    var y = window.scrollY;
+    if (head) head.classList.toggle("is-scrolled", y > 8);
     if (bar) {
       var max = doc.documentElement.scrollHeight - window.innerHeight;
-      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(window.scrollY / max, 1) : 0) + ")";
+      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(y / max, 1) : 0) + ")";
+    }
+    // While the next section covers the pinned opening, the opening eases back a little.
+    if (heroIn && !reduced && wide.matches && heroH) {
+      var start = heroH - window.innerHeight;
+      var p = Math.max(0, Math.min((y - start) / window.innerHeight, 1));
+      heroIn.style.transform = p ? "scale(" + (1 - p * 0.05) + ")" : "";
+      heroIn.style.opacity = p ? String(1 - p * 0.55) : "";
     }
   };
+  var onScroll = function () { if (!ticking) { ticking = true; requestAnimationFrame(paint); } };
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
